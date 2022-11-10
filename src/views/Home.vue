@@ -1,18 +1,15 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <div>count: {{count}}</div>
+    <button @click="add">add</button>
+    <button @click="minue">minue</button>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+<script setup>
+import useCounter from '@/hook/useCounter'
+const {count, add, minue} = useCounter()
 
-export default defineComponent({
-  name: "Home",
-  components: {
-    HelloWorld,
-  },
-});
 </script>
+<style lang="scss" scoped>
+</style>
