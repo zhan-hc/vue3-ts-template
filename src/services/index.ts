@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios from "axios";
 
 import {
   handleChangeRequestHeader,
@@ -22,16 +22,16 @@ export interface FcResponse<T> {
 }
 
 axios.interceptors.request.use((config) => {
-  // config = handleChangeRequestHeader(config);
-  // config = handleConfigureAuth(config);
+  config = handleChangeRequestHeader(config);
+  config = handleConfigureAuth(config);
   return config;
 });
 
 axios.interceptors.response.use(
   (response) => {
     if (response.status !== 200) return Promise.reject(response.data);
-    // handleAuthError(response.data.errno);
-    // handleGeneralError(response.data.errno, response.data.errmsg);
+    handleAuthError(response.data.errno);
+    handleGeneralError(response.data.errno, response.data.errmsg);
     return response;
   },
   (err) => {

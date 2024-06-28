@@ -1,24 +1,42 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { UserConfigExport, ConfigEnv } from 'vite'
+import { defineConfig } from 'vite'
+import pxtorem from 'postcss-pxtorem'
 import vue from '@vitejs/plugin-vue'
-import { viteMockServe } from "vite-plugin-mock";
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { VantResolver } from '@vant/auto-import-resolver'
+
 
 // https://vitejs.dev/config/
-export default({ command, mode }: ConfigEnv): UserConfigExport => {
-  return {
-    plugins: [
-      vue(),
-      viteMockServe({
-        mockPath: './mock', // mock文件所在文件夹
-        enable: mode === 'mock',
-        watchFiles: true, // 监视文件更改 这样更改mock的时候，不需要重新启动编译
-      }),
-    ],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+export default defineConfig({
+  plugins: [
+    vue(),
+    AutoImport({
+      resolvers: [VantResolver()],
+    }),
+    Components({
+      resolvers: [VantResolver()],
+    }),
+  ],
+  css: {
+    postcss: {
+      plugins: [
+        pxtorem({
+          rootValue: 37.5,
+           propList: ["*"]
+        })
+      ]
+    },
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "@/assets/style/mixin.scss";'
       }
     }
+  },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   }
-}
+})
